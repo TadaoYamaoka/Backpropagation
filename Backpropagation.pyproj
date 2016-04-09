@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>7c617b75-1c2c-4bc1-a485-d6ddce2629c3</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Backpropagation.py</StartupFile>
+    <StartupFile>BackpropagationChainer.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +23,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Backpropagation.py" />
+    <Compile Include="BackpropagationChainerTest.py">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="BackpropagationChainer.py" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
