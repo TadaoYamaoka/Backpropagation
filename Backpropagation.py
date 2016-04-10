@@ -21,7 +21,7 @@ W2 = np.array([[1.0, 0.1], [0.1, 1.1]])
 Z = np.array([[0, 0, 0]])
 Y = np.array([[0, 0]])
 
-eta = 0.005
+learning_rate = 0.005
 
 def sigmoid(u):
     return 1 / (1 + np.exp(-u))
@@ -31,25 +31,26 @@ def softmax(u):
     return e / np.sum(e)
 
 # 順伝播
-def forward(X):
+def forward(x):
     global W1
     global W2
-    Z = sigmoid(X.dot(W1))
-    Y = softmax(Z.dot(W2))
-    return Y, Z
+    z1 = sigmoid(x.dot(W1))
+    y = softmax(z1.dot(W2))
+    return y, z1
 
 # 逆伝播
-def back_propagation(X, Z, Y, T):
+def back_propagation(x, z1, y, d):
     global W1
     global W2
-    D2 = Y - T
-    W2_delta = Z.T.dot(D2)
-    W2 -= eta * W2_delta
+    delta2 = y - d
+    grad_W2 = z1.T.dot(delta2)
 
-    sigmoid_dash = Z * (1 - Z)
-    D1 = D2.dot(W2.T) * sigmoid_dash
-    W1_delta = X.T.dot(D1)
-    W1 -= eta * W1_delta
+    sigmoid_dash = z1 * (1 - z1)
+    delta1 = delta2.dot(W2.T) * sigmoid_dash
+    grad_W1 = x.T.dot(delta1)
+
+    W2 -= learning_rate * grad_W2
+    W1 -= learning_rate * grad_W1
 
 # メインウィンドウ
 class MainWindow(QtGui.QWidget):

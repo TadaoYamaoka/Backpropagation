@@ -2,8 +2,8 @@
 
 import numpy as np
 import chainer
-from chainer import cuda, Function, gradient_check, Variable, optimizers, serializers, utils
-from chainer import Link, Chain, ChainList
+from chainer import Function, Variable, optimizers
+from chainer import Link, Chain
 import chainer.functions as F
 import chainer.links as L
 
@@ -51,5 +51,3 @@ if __name__ == '__main__':
     print "b1=\n" + str(model.layer1.b.data)
     print "w2=\n" + str(model.layer2.W.data)
     print "b2=\n" + str(model.layer2.b.data)
-
-    pass

@@ -5,8 +5,8 @@ from PyQt4 import QtGui, QtCore
 import random
 import numpy as np
 import chainer
-from chainer import cuda, Function, gradient_check, Variable, optimizers, serializers, utils
-from chainer import Link, Chain, ChainList
+from chainer import Function, Variable, optimizers
+from chainer import Link, Chain
 import chainer.functions as F
 import chainer.links as L
 

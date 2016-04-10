@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>7c617b75-1c2c-4bc1-a485-d6ddce2629c3</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>BackpropagationChainer.py</StartupFile>
+    <StartupFile>BackpropagationChainerTest.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,6 +22,7 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BackpropagationTest.py" />
     <Compile Include="Backpropagation.py" />
     <Compile Include="BackpropagationChainerTest.py">
       <SubType>Code</SubType>
