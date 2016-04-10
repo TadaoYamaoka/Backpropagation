@@ -26,9 +26,11 @@ NN_Y0 = MARGIN + 50
 NN_DIAMETER = 30
 NN_SPACE = 100
 OUT_X0 = NN_X0 + NN_SPACE * 2.5 + MARGIN * 2
+LOSS_Y0 = MARGIN * 2 + WIDTH
 
 DATA = []
 TEST = []
+LOSS = []
 
 Z = np.array([[0, 0, 0]])
 Y = np.array([[0, 0]])
@@ -50,6 +52,8 @@ def backpropagation(u2, t_data):
     t = Variable(np.array(t_data))
     loss = F.softmax_cross_entropy(u2, t)
 
+    LOSS.append(float(loss.data))
+
     optimizer.zero_grads()
 
     loss.backward()
@@ -70,7 +74,7 @@ class MainWindow(QtGui.QWidget):
         self.btnRandom.move(OUT_X0, MARGIN + WIDTH + MARGIN)
 
         # ウィンドウサイズ
-        self.resize(850, 300)
+        self.resize(850, 480)
 
     # Random
     def random(self):
@@ -170,13 +174,13 @@ class MainWindow(QtGui.QWidget):
             # 最後に入力された値
             data = DATA[len(DATA) - 1]
             X = data[0]
-            T = data[1]
+            D = data[1]
             # 入力値
             painter.drawText(NN_X0 - NN_DIAMETER / 3, NN_Y0 + NN_DIAMETER / 1.5, "{0:.2f}".format(X[0]))
             painter.drawText(NN_X0 - NN_DIAMETER / 3, NN_Y0 + NN_SPACE + NN_DIAMETER / 1.5, "{0:.2f}".format(X[1]))
             # 教師データ
-            painter.drawText(NN_X0 + NN_SPACE * 2.5 - NN_DIAMETER / 8, NN_Y0 + NN_DIAMETER / 1.5, "{0}".format(1 if T[0] == 0 else 0))
-            painter.drawText(NN_X0 + NN_SPACE * 2.5 - NN_DIAMETER / 8, NN_Y0 + NN_SPACE + NN_DIAMETER / 1.5, "{0}".format(1 if T[0] == 1 else 0))
+            painter.drawText(NN_X0 + NN_SPACE * 2.5 - NN_DIAMETER / 8, NN_Y0 + NN_DIAMETER / 1.5, "{0}".format(1 if D[0] == 0 else 0))
+            painter.drawText(NN_X0 + NN_SPACE * 2.5 - NN_DIAMETER / 8, NN_Y0 + NN_SPACE + NN_DIAMETER / 1.5, "{0}".format(1 if D[0] == 1 else 0))
 
         # 隠れ層の値
         if Z[0,0] != 0 and Z[0,1] != 0:
@@ -187,6 +191,14 @@ class MainWindow(QtGui.QWidget):
         if Y[0,0] != 0 and Y[0,1] != 0:
             painter.drawText(NN_X0 + NN_SPACE * 2  - NN_DIAMETER / 3, NN_Y0 + NN_DIAMETER / 1.5, "{0:.2f}".format(Y[0,0]))
             painter.drawText(NN_X0 + NN_SPACE * 2 - NN_DIAMETER / 3, NN_Y0 + NN_SPACE + NN_DIAMETER / 1.5, "{0:.2f}".format(Y[0,1]))
+
+        # 損失グラフ
+        painter.drawRect(NN_X0, LOSS_Y0, WIDTH, WIDTH)
+        painter.drawText(NN_X0 - 10, LOSS_Y0 + WIDTH + 10, "0")
+        painter.drawText(NN_X0 - 10, LOSS_Y0 + 10, "1")
+        painter.drawText(NN_X0 - 25, LOSS_Y0 + WIDTH / 2, "loss")
+        for i, loss in enumerate(LOSS):
+            painter.drawPoint(NN_X0 + i, LOSS_Y0 + (1 - loss) * WIDTH)
 
         # ニューラルネットワークのパラメータ
         painter.setPen(QtGui.QPen(QtCore.Qt.darkGreen, 1))
@@ -208,8 +220,8 @@ class MainWindow(QtGui.QWidget):
         penBlue = QtGui.QPen(QtCore.Qt.blue, 5)
         for data in DATA:
             X = data[0]
-            T = data[1]
-            if T[0] == 0:
+            D = data[1]
+            if D[0] == 0:
                 pen = penRed
             else:
                 pen = penBlue

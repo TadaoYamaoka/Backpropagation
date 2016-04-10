@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>7c617b75-1c2c-4bc1-a485-d6ddce2629c3</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>BackpropagationChainerTest.py</StartupFile>
+    <StartupFile>BackpropagationChainer.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

@@ -11,9 +11,11 @@ NN_Y0 = MARGIN + 50
 NN_DIAMETER = 30
 NN_SPACE = 100
 OUT_X0 = NN_X0 + NN_SPACE * 2.5 + MARGIN * 2
+LOSS_Y0 = MARGIN * 2 + WIDTH
 
 DATA = []
 TEST = []
+LOSS = []
 
 # ニューラルネットワークのパラメータ
 W1 = np.array([[1.0, 0.2], [0.1, 1.1]])
@@ -103,8 +105,12 @@ class MainWindow(QtGui.QWidget):
             Y, Z = forward(X)
 
             # 逆伝播
-            T = np.array([data[1]])
-            back_propagation(X, Z, Y, T)
+            D = np.array([data[1]])
+            back_propagation(X, Z, Y, D)
+
+            # 損失
+            loss = -D.dot(np.log(Y).T)
+            LOSS.append(loss[0])
 
             # 描画更新
             self.update()
@@ -164,13 +170,13 @@ class MainWindow(QtGui.QWidget):
             # 最後に入力された値
             data = DATA[len(DATA) - 1]
             X = data[0]
-            T = data[1]
+            D = data[1]
             # 入力値
             painter.drawText(NN_X0 - NN_DIAMETER / 3, NN_Y0 + NN_DIAMETER / 1.5, "{0:.2f}".format(X[0]))
             painter.drawText(NN_X0 - NN_DIAMETER / 3, NN_Y0 + NN_SPACE + NN_DIAMETER / 1.5, "{0:.2f}".format(X[1]))
             # 教師データ
-            painter.drawText(NN_X0 + NN_SPACE * 2.5 - NN_DIAMETER / 8, NN_Y0 + NN_DIAMETER / 1.5, "{0}".format(T[0]))
-            painter.drawText(NN_X0 + NN_SPACE * 2.5 - NN_DIAMETER / 8, NN_Y0 + NN_SPACE + NN_DIAMETER / 1.5, "{0}".format(T[1]))
+            painter.drawText(NN_X0 + NN_SPACE * 2.5 - NN_DIAMETER / 8, NN_Y0 + NN_DIAMETER / 1.5, "{0}".format(D[0]))
+            painter.drawText(NN_X0 + NN_SPACE * 2.5 - NN_DIAMETER / 8, NN_Y0 + NN_SPACE + NN_DIAMETER / 1.5, "{0}".format(D[1]))
 
         # 隠れ層の値
         if Z[0,0] != 0 and Z[0,1] != 0:
@@ -181,6 +187,14 @@ class MainWindow(QtGui.QWidget):
         if Y[0,0] != 0 and Y[0,1] != 0:
             painter.drawText(NN_X0 + NN_SPACE * 2  - NN_DIAMETER / 3, NN_Y0 + NN_DIAMETER / 1.5, "{0:.2f}".format(Y[0,0]))
             painter.drawText(NN_X0 + NN_SPACE * 2 - NN_DIAMETER / 3, NN_Y0 + NN_SPACE + NN_DIAMETER / 1.5, "{0:.2f}".format(Y[0,1]))
+
+        # 損失グラフ
+        painter.drawRect(NN_X0, LOSS_Y0, WIDTH, WIDTH)
+        painter.drawText(NN_X0 - 10, LOSS_Y0 + WIDTH + 10, "0")
+        painter.drawText(NN_X0 - 10, LOSS_Y0 + 10, "1")
+        painter.drawText(NN_X0 - 25, LOSS_Y0 + WIDTH / 2, "loss")
+        for i, loss in enumerate(LOSS):
+            painter.drawPoint(NN_X0 + i, LOSS_Y0 + (1 - loss) * WIDTH)
 
         # ニューラルネットワークのパラメータ
         painter.setPen(QtGui.QPen(QtCore.Qt.darkGreen, 1))
@@ -200,8 +214,8 @@ class MainWindow(QtGui.QWidget):
         penBlue = QtGui.QPen(QtCore.Qt.blue, 5)
         for data in DATA:
             X = data[0]
-            T = data[1]
-            if T[0] == 1:
+            D = data[1]
+            if D[0] == 1:
                 pen = penRed
             else:
                 pen = penBlue
